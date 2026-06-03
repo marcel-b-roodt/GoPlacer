@@ -9,6 +9,7 @@ const _ENTRY_SCRIPT := preload(
 var _editor_plugin: EditorPlugin
 var _floor_snap_enabled: bool = true
 var _surface_snap_enabled: bool = true
+var _mesh_picking_enabled: bool = true
 var _normal_align_enabled: bool = false
 var _aabb_snap_enabled: bool = false
 var _snap_angle_step: float = 15.0
@@ -27,6 +28,9 @@ func set_floor_snap(enabled: bool) -> void:
 
 func set_surface_snap(enabled: bool) -> void:
 	_surface_snap_enabled = enabled
+
+func set_mesh_picking(enabled: bool) -> void:
+	_mesh_picking_enabled = enabled
 
 func set_normal_align(enabled: bool) -> void:
 	_normal_align_enabled = enabled
@@ -54,6 +58,9 @@ func normal_align_enabled() -> bool:
 
 func aabb_snap_enabled() -> bool:
 	return _aabb_snap_enabled
+
+func mesh_picking_enabled() -> bool:
+	return _mesh_picking_enabled
 
 func target_parent_node() -> Node:
 	return _target_parent_node

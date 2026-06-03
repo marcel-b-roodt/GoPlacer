@@ -150,7 +150,8 @@ func _on_click_lock(camera: Camera3D, event: InputEvent) -> bool:
 	var ghost: Node3D = _ghost_manager.get_ghost()
 	var hit := SnapHelper.raycast_scene(
 		camera, event.position, RAY_LENGTH,
-		_ghost_manager.get_exclusion_rids(), ghost
+		_ghost_manager.get_exclusion_rids(), ghost,
+		_placement_controller.mesh_picking_enabled()
 	)
 	_ghost_hit_position = hit.position
 	_ghost_hit_normal = hit.normal
@@ -175,7 +176,8 @@ func _update_ghost_position(
 		return
 	var hit := SnapHelper.raycast_scene(
 		camera, mouse_pos, RAY_LENGTH,
-		_ghost_manager.get_exclusion_rids(), ghost
+		_ghost_manager.get_exclusion_rids(), ghost,
+		_placement_controller.mesh_picking_enabled()
 	)
 	ghost.visible = true
 	_ghost_hit_position = hit.position

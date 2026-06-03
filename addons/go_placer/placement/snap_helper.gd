@@ -15,6 +15,7 @@ static func raycast_scene(
 	ray_length: float = 4000.0,
 	exclude_rids: Array[RID] = [],
 	exclude_node: Node = null,
+	mesh_picking: bool = true,
 ) -> Dictionary:
 	var result := {"position": Vector3.ZERO, "normal": Vector3.UP}
 	var world_3d: World3D = camera.get_world_3d()
@@ -44,13 +45,15 @@ static func raycast_scene(
 			result.normal = hit.normal
 		return result
 
-	var mesh_result := _raycast_mesh_faces(
-		origin, direction, ray_length, exclude_node
-	)
-	if mesh_result.is_empty():
-		result.position = floor_plane_intersect(camera, mouse_pos)
-		return result
-	return mesh_result
+	if mesh_picking:
+		var mesh_result := _raycast_mesh_faces(
+			origin, direction, ray_length, exclude_node
+		)
+		if not mesh_result.is_empty():
+			return mesh_result
+	result.position = floor_plane_intersect(camera, mouse_pos)
+	result.normal = Vector3.UP
+	return result
 
 static func _raycast_mesh_faces(
 	origin: Vector3,
@@ -264,7 +267,7 @@ static func apply_placement_transform(
 	if aabb_snap:
 		offset = flush_aabb_offset(node, normal, align_to_normal)
 	node.global_position = position + offset
-	if align_to_normal and normal != Vector3.UP:
+	if align_to_normal and absf(normal.dot(Vector3.UP)) < 0.999:
 		var align_basis := _basis_up_aligned(normal, azimuth)
 		node.basis = align_basis
 	else:

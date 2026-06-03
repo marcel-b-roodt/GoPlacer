@@ -16,6 +16,7 @@ var _target_parent_label: Label = null
 var _clear_parent_btn: Button = null
 
 var _aabb_snap_check: CheckBox = null
+var _mesh_picking_check: CheckBox = null
 
 func setup(placement_controller: Node) -> void:
 	_placement_controller = placement_controller
@@ -59,6 +60,16 @@ func _ready() -> void:
 	)
 	_aabb_snap_check.toggled.connect(_on_aabb_snap_toggled)
 	_content.add_child(_aabb_snap_check)
+
+	_mesh_picking_check = CheckBox.new()
+	_mesh_picking_check.text = "Mesh Picking"
+	_mesh_picking_check.button_pressed = true
+	_mesh_picking_check.tooltip_text = (
+		"Raycast against mesh faces when no physics collider is found."
+		+ " Disable for better performance in large scenes."
+	)
+	_mesh_picking_check.toggled.connect(_on_mesh_picking_toggled)
+	_content.add_child(_mesh_picking_check)
 
 	var snap_row := HBoxContainer.new()
 	_content.add_child(snap_row)
@@ -169,6 +180,10 @@ func _on_normal_align_toggled(enabled: bool) -> void:
 func _on_aabb_snap_toggled(enabled: bool) -> void:
 	if _placement_controller != null:
 		_placement_controller.set_aabb_snap(enabled)
+
+func _on_mesh_picking_toggled(enabled: bool) -> void:
+	if _placement_controller != null:
+		_placement_controller.set_mesh_picking(enabled)
 
 func _on_snap_angle_selected(index: int) -> void:
 	var step: float = float(_snap_angle_option.get_item_metadata(index))

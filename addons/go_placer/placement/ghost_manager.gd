@@ -13,6 +13,7 @@ const GHOST_MATERIAL_ALPHA := 0.5
 
 var _ghost: Node3D = null
 var _ghost_rids: Array[RID] = []
+var _ghost_material: StandardMaterial3D = null
 
 func get_ghost() -> Node3D:
 	return _ghost
@@ -69,14 +70,15 @@ func _disable_collision(node: Node) -> void:
 		_disable_collision(child)
 
 func _apply_material(node: Node) -> void:
+	if _ghost_material == null:
+		_ghost_material = StandardMaterial3D.new()
+		_ghost_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		_ghost_material.albedo_color = Color(0.5, 0.8, 1.0, GHOST_MATERIAL_ALPHA)
+		_ghost_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	if node is MeshInstance3D:
 		var mi: MeshInstance3D = node as MeshInstance3D
 		var surface_count: int = mi.get_surface_override_material_count()
 		for i: int in surface_count:
-			var mat := StandardMaterial3D.new()
-			mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-			mat.albedo_color = Color(0.5, 0.8, 1.0, GHOST_MATERIAL_ALPHA)
-			mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-			mi.set_surface_override_material(i, mat)
+			mi.set_surface_override_material(i, _ghost_material)
 	for child: Node in node.get_children():
 		_apply_material(child)
