@@ -7,8 +7,6 @@ const _ENTRY_SCRIPT := preload(
 )
 
 var _editor_plugin: EditorPlugin
-var _floor_snap_enabled: bool = true
-var _surface_snap_enabled: bool = true
 var _mesh_picking_enabled: bool = true
 var _normal_align_enabled: bool = false
 var _aabb_snap_enabled: bool = false
@@ -22,12 +20,6 @@ func setup(plugin: EditorPlugin) -> void:
 
 func set_active_entry(entry: GoPlacerPaletteEntry) -> void:
 	_active_entry = entry
-
-func set_floor_snap(enabled: bool) -> void:
-	_floor_snap_enabled = enabled
-
-func set_surface_snap(enabled: bool) -> void:
-	_surface_snap_enabled = enabled
 
 func set_mesh_picking(enabled: bool) -> void:
 	_mesh_picking_enabled = enabled

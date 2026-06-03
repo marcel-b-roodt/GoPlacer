@@ -7,8 +7,6 @@ const _DRAWER_SCRIPT := preload(
 )
 
 var _placement_controller: Node = null
-var _floor_snap_check: CheckBox = null
-var _surface_snap_check: CheckBox = null
 var _normal_align_check: CheckBox = null
 var _snap_angle_option: OptionButton = null
 var _pos_snap_spin: SpinBox = null
@@ -26,22 +24,6 @@ func set_plugin(plugin: EditorPlugin) -> void:
 
 func _ready() -> void:
 	_setup_drawer("Settings", true)
-
-	_floor_snap_check = CheckBox.new()
-	_floor_snap_check.text = "Floor Snap"
-	_floor_snap_check.button_pressed = true
-	_floor_snap_check.tooltip_text = "Snap placement to the floor surface."
-	_floor_snap_check.toggled.connect(_on_floor_snap_toggled)
-	_content.add_child(_floor_snap_check)
-
-	_surface_snap_check = CheckBox.new()
-	_surface_snap_check.text = "Surface Snap"
-	_surface_snap_check.button_pressed = true
-	_surface_snap_check.tooltip_text = (
-		"Snap placement to any surface via ray-cast."
-	)
-	_surface_snap_check.toggled.connect(_on_surface_snap_toggled)
-	_content.add_child(_surface_snap_check)
 
 	_normal_align_check = CheckBox.new()
 	_normal_align_check.text = "Align to Normal"
@@ -164,18 +146,6 @@ func _populate_snap_angle_options() -> void:
 	_snap_angle_option.add_item("90\u00b0", 4)
 	_snap_angle_option.set_item_metadata(4, 90.0)
 	_snap_angle_option.select(1)
-
-func _on_floor_snap_toggled(enabled: bool) -> void:
-	if _placement_controller != null:
-		_placement_controller.set_floor_snap(enabled)
-
-func _on_surface_snap_toggled(enabled: bool) -> void:
-	if _placement_controller != null:
-		_placement_controller.set_surface_snap(enabled)
-
-func _on_normal_align_toggled(enabled: bool) -> void:
-	if _placement_controller != null:
-		_placement_controller.set_normal_align(enabled)
 
 func _on_aabb_snap_toggled(enabled: bool) -> void:
 	if _placement_controller != null:

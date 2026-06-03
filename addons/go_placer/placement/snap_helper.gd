@@ -271,6 +271,7 @@ static func apply_placement_transform(
 		var align_basis := _basis_up_aligned(normal, azimuth)
 		node.basis = align_basis
 	else:
+		node.basis = Basis(Vector3.RIGHT, Vector3.UP, Vector3.BACK)
 		node.rotation.y = azimuth
 
 static func flush_aabb_offset(
