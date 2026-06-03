@@ -98,10 +98,9 @@ func _ready() -> void:
 	_entry_grid = _ITEM_LIST_SCRIPT.new()
 	_entry_grid.custom_minimum_size = Vector2(0, 160)
 	_entry_grid.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_entry_grid.icon_mode = ItemList.ICON_MODE_TOP
 	_entry_grid.fixed_icon_size = Vector2i(THUMB_SIZE, THUMB_SIZE)
 	_entry_grid.fixed_column_width = TILE_SIZE
-	_entry_grid.fixed_item_size = Vector2i(TILE_SIZE, TILE_SIZE)
+	_entry_grid.icon_mode = ItemList.ICON_MODE_TOP
 	_entry_grid.max_columns = 0
 	_entry_grid.max_text_lines = 1
 	_entry_grid.add_theme_stylebox_override(
@@ -149,23 +148,26 @@ func _discover_palettes() -> void:
 	_palettes.clear()
 	if not Engine.is_editor_hint():
 		return
-	var dirs := PackedStringArray(["res://palettes/", "res://"])
-	for dir_path in dirs:
-		if not DirAccess.dir_exists_absolute(dir_path):
-			continue
-		var da := DirAccess.open(dir_path)
-		if da == null:
-			continue
-		da.list_dir_begin()
-		var file_name := da.get_next()
-		while file_name != "":
-			if file_name.get_extension() == "tres":
-				var full_path: String = dir_path.path_join(file_name)
-				var res: Resource = load(full_path)
-				if res is GoPlacerPalette:
-					_palettes.append(res as GoPlacerPalette)
-			file_name = da.get_next()
-		da.list_dir_end()
+	_discover_palettes_in_dir("res://palettes/")
+
+func _discover_palettes_in_dir(dir_path: String) -> void:
+	if not DirAccess.dir_exists_absolute(dir_path):
+		return
+	var da := DirAccess.open(dir_path)
+	if da == null:
+		return
+	da.list_dir_begin()
+	var file_name := da.get_next()
+	while file_name != "":
+		var full_path: String = dir_path.path_join(file_name)
+		if da.current_is_dir():
+			_discover_palettes_in_dir(full_path)
+		elif file_name.get_extension() == "tres":
+			var res: Resource = load(full_path)
+			if res is GoPlacerPalette:
+				_palettes.append(res as GoPlacerPalette)
+		file_name = da.get_next()
+	da.list_dir_end()
 
 func _rebuild_palette_dropdown() -> void:
 	if _palette_option == null:
