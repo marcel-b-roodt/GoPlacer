@@ -32,6 +32,12 @@ var _add_entry_btn: Button = null
 var _remove_entry_btn: Button = null
 var _entry_grid: GoPlacerItemList = null
 
+func setup(placement_controller: Node) -> void:
+	_placement_controller = placement_controller
+
+func set_plugin(plugin: EditorPlugin) -> void:
+	super.set_plugin(plugin)
+
 func _ready() -> void:
 	_setup_drawer("Palettes", true)
 
