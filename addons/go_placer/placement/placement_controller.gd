@@ -13,13 +13,13 @@ var _normal_align_enabled: bool = false
 var _aabb_snap_enabled: bool = false
 var _snap_angle_step: float = 15.0
 var _position_snap_size: float = 1.0
-var _active_entry: Resource = null
+var _active_entry: GoPlacerPaletteEntry = null
 var _target_parent_node: Node = null
 
 func setup(plugin: EditorPlugin) -> void:
 	_editor_plugin = plugin
 
-func set_active_entry(entry: Resource) -> void:
+func set_active_entry(entry: GoPlacerPaletteEntry) -> void:
 	_active_entry = entry
 
 func set_floor_snap(enabled: bool) -> void:

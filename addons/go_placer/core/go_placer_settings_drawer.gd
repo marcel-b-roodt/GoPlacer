@@ -1,6 +1,6 @@
 @tool
 class_name GoPlacerSettingsDrawer
-extends "res://addons/go_placer/core/go_placer_drawer.gd"
+extends GoPlacerDrawer
 
 const _DRAWER_SCRIPT := preload(
 	"res://addons/go_placer/core/go_placer_drawer.gd"

@@ -14,8 +14,8 @@ const _ENTRY_SCRIPT := preload(
 )
 
 var _placement_controller: Node = null
-var _palette_drawer: VBoxContainer = null
-var _settings_drawer: VBoxContainer = null
+var _palette_drawer: GoPlacerPaletteDrawer = null
+var _settings_drawer: GoPlacerSettingsDrawer = null
 var _plugin: EditorPlugin = null
 var _built: bool = false
 
@@ -54,12 +54,12 @@ func _build_ui() -> void:
 		_settings_drawer.set_plugin(_plugin)
 	add_child(_settings_drawer)
 
-func get_active_entry() -> Resource:
+func get_active_entry() -> GoPlacerPaletteEntry:
 	if _palette_drawer == null:
 		return null
 	return _palette_drawer.get_active_entry()
 
-func _on_entry_selected(entry: Resource) -> void:
+func _on_entry_selected(entry: GoPlacerPaletteEntry) -> void:
 	if entry == null or entry.asset == null:
 		return
 	if _plugin != null:

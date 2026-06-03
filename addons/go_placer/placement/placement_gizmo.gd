@@ -29,7 +29,7 @@ func show(
 	_arc.owner = scene_root
 	var forward: Vector3 = Vector3.FORWARD * GIZMO_RADIUS
 	if align_to_normal and normal != Vector3.UP:
-		var basis := _SNAP_HELPER_SCRIPT._basis_up_aligned(normal, 0.0)
+		var basis := SnapHelper._basis_up_aligned(normal, 0.0)
 		forward = basis * Vector3.FORWARD * GIZMO_RADIUS
 	var line_mesh := _create_line_mesh(position, position + forward)
 	_line = MeshInstance3D.new()
@@ -49,7 +49,7 @@ func position_gizmo(
 ) -> void:
 	var gizmo_basis: Basis = Basis.IDENTITY
 	if align_to_normal and normal != Vector3.UP:
-		gizmo_basis = _SNAP_HELPER_SCRIPT._basis_up_aligned(normal, 0.0)
+		gizmo_basis = SnapHelper._basis_up_aligned(normal, 0.0)
 	if _arc != null and is_instance_valid(_arc):
 		_arc.global_position = position
 		_arc.global_basis = gizmo_basis

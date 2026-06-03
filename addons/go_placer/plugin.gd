@@ -29,24 +29,24 @@ const _ENTRY_SCRIPT := preload(
 	"res://addons/go_placer/palette/go_placer_palette_entry.gd"
 )
 
-var _ghost_manager: RefCounted = _GHOST_MANAGER_SCRIPT.new()
-var _gizmo: RefCounted = _GIZMO_SCRIPT.new()
-var _placement_controller: Node = null
-var _panel: Control = null
+var _ghost_manager: GhostManager = _GHOST_MANAGER_SCRIPT.new()
+var _gizmo: PlacementGizmo = _GIZMO_SCRIPT.new()
+var _placement_controller: PlacementController = null
+var _panel: GoPlacerPanel = null
 var _state: int = PlacingState.IDLE
 var _ghost_hit_position: Vector3 = Vector3.ZERO
 var _ghost_hit_normal: Vector3 = Vector3.UP
 var _drag_start_x: float = 0.0
 var _drag_rotation_y: float = 0.0
 var _has_valid_hit: bool = false
-var _current_entry: Resource = null
+var _current_entry: GoPlacerPaletteEntry = null
 
 func _enter_tree() -> void:
-	_placement_controller = _CONTROLLER_SCRIPT.new()
+	_placement_controller = PlacementController.new()
 	add_child(_placement_controller)
 	_placement_controller.setup(self)
 
-	_panel = _PANEL_SCRIPT.new()
+	_panel = GoPlacerPanel.new()
 	_panel.name = "GoPlacer"
 	_panel.setup(_placement_controller, self)
 	add_control_to_dock(DOCK_SLOT_BOTTOM, _panel)
@@ -148,7 +148,7 @@ func _handle_mouse_motion(
 
 func _on_click_lock(camera: Camera3D, event: InputEvent) -> bool:
 	var ghost: Node3D = _ghost_manager.get_ghost()
-	var hit := _SNAP_HELPER_SCRIPT.raycast_scene(
+	var hit := SnapHelper.raycast_scene(
 		camera, event.position, RAY_LENGTH,
 		_ghost_manager.get_exclusion_rids(), ghost
 	)
@@ -173,7 +173,7 @@ func _update_ghost_position(
 	var ghost: Node3D = _ghost_manager.get_ghost()
 	if ghost == null:
 		return
-	var hit := _SNAP_HELPER_SCRIPT.raycast_scene(
+	var hit := SnapHelper.raycast_scene(
 		camera, mouse_pos, RAY_LENGTH,
 		_ghost_manager.get_exclusion_rids(), ghost
 	)
@@ -202,7 +202,7 @@ func _update_ghost_transform() -> void:
 			pos.x = snappedf(pos.x, snap_size)
 			pos.y = snappedf(pos.y, snap_size)
 			pos.z = snappedf(pos.z, snap_size)
-	_SNAP_HELPER_SCRIPT.apply_placement_transform(
+	SnapHelper.apply_placement_transform(
 		ghost, pos, _ghost_hit_normal, _drag_rotation_y,
 		_placement_controller.normal_align_enabled(),
 		_placement_controller.aabb_snap_enabled()
@@ -212,7 +212,7 @@ func _commit_place() -> void:
 	var ghost: Node3D = _ghost_manager.get_ghost()
 	if ghost == null or not _has_valid_hit:
 		return
-	var entry: Resource = _current_entry
+	var entry: GoPlacerPaletteEntry = _current_entry
 	if entry == null or entry.asset == null:
 		_cancel_placing()
 		return
@@ -224,9 +224,9 @@ func _commit_place() -> void:
 
 	var parent: Node = _placement_controller.target_parent_node()
 	if parent == null or not is_instance_valid(parent):
-		parent = _SNAP_HELPER_SCRIPT.find_target_parent(scene_root)
+		parent = SnapHelper.find_target_parent(scene_root)
 
-	var instance: Node = _INSTANCE_FACTORY_SCRIPT.create_from_entry(entry)
+	var instance: Node = InstanceFactory.create_from_entry(entry)
 	if instance == null:
 		_cancel_placing()
 		return
@@ -262,7 +262,7 @@ func _cancel_placing() -> void:
 func start_placing() -> void:
 	if _panel != null and not _panel.visible:
 		return
-	var entry: Resource = _panel.get_active_entry()
+	var entry: GoPlacerPaletteEntry = _panel.get_active_entry()
 	if entry == null or entry.asset == null:
 		return
 	_current_entry = entry

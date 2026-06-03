@@ -21,12 +21,10 @@ func get_exclusion_rids() -> Array[RID]:
 	return _ghost_rids
 
 func spawn(
-	entry: Resource, scene_root: Node
+	entry: GoPlacerPaletteEntry, scene_root: Node
 ) -> bool:
 	clear()
-	if entry == null or not entry is GoPlacerPaletteEntry:
-		return false
-	if (entry as GoPlacerPaletteEntry).asset == null:
+	if entry == null or entry.asset == null:
 		return false
 	var instance: Node = _INSTANCE_FACTORY_SCRIPT.create_from_entry(entry)
 	if instance == null:
