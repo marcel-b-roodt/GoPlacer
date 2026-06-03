@@ -18,24 +18,7 @@ const _ITEM_LIST_SCRIPT := preload(
 	"res://addons/go_placer/core/go_placer_item_list.gd"
 )
 const THUMB_SIZE := 64
-
-var _placement_controller: Node = null
-var _palettes: Array[GoPlacerPalette] = []
-var _active_palette_index: int = -1
-var _active_entry_index: int = -1
-var _palette_option: OptionButton = null
-var _new_pal_btn: Button = null
-var _delete_pal_btn: Button = null
-var _edit_pal_btn: Button = null
-var _add_entry_btn: Button = null
-var _remove_entry_btn: Button = null
-var _entry_grid: GoPlacerItemList = null
-
-func setup(placement_controller: Node) -> void:
-	_placement_controller = placement_controller
-
-func set_plugin(plugin: EditorPlugin) -> void:
-	super.set_plugin(plugin)
+const TILE_SIZE := 80
 
 func _ready() -> void:
 	_setup_drawer("Palettes", true)
@@ -99,8 +82,10 @@ func _ready() -> void:
 	_entry_grid.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_entry_grid.icon_mode = ItemList.ICON_MODE_TOP
 	_entry_grid.fixed_icon_size = Vector2i(THUMB_SIZE, THUMB_SIZE)
+	_entry_grid.fixed_column_width = TILE_SIZE
+	_entry_grid.fixed_item_size = Vector2i(TILE_SIZE, TILE_SIZE)
 	_entry_grid.max_columns = 0
-	_entry_grid.max_text_lines = 2
+	_entry_grid.max_text_lines = 1
 	_entry_grid.add_theme_stylebox_override(
 		"panel", _make_panel_style()
 	)
