@@ -3,8 +3,31 @@ extends EditorPlugin
 
 enum PlacingState { IDLE, PREVIEWING, DRAG_ROTATE }
 
+# Self-preloads — Godot processes scripts alphabetically; references to
+# class_names must be preloaded to avoid startup-scan compile errors.
 const RAY_LENGTH := 4000.0
 const PIXELS_PER_RADIAN := 0.005
+const _PANEL_SCRIPT := preload(
+	"res://addons/go_placer/core/go_placer_panel.gd"
+)
+const _CONTROLLER_SCRIPT := preload(
+	"res://addons/go_placer/placement/placement_controller.gd"
+)
+const _GHOST_MANAGER_SCRIPT := preload(
+	"res://addons/go_placer/placement/ghost_manager.gd"
+)
+const _GIZMO_SCRIPT := preload(
+	"res://addons/go_placer/placement/placement_gizmo.gd"
+)
+const _INSTANCE_FACTORY_SCRIPT := preload(
+	"res://addons/go_placer/placement/instance_factory.gd"
+)
+const _SNAP_HELPER_SCRIPT := preload(
+	"res://addons/go_placer/placement/snap_helper.gd"
+)
+const _ENTRY_SCRIPT := preload(
+	"res://addons/go_placer/palette/go_placer_palette_entry.gd"
+)
 
 var _ghost_manager := GhostManager.new()
 var _gizmo := PlacementGizmo.new()

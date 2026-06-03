@@ -2,6 +2,10 @@
 class_name PlacementController
 extends Node
 
+const _ENTRY_SCRIPT := preload(
+	"res://addons/go_placer/palette/go_placer_palette_entry.gd"
+)
+
 var _editor_plugin: EditorPlugin
 var _floor_snap_enabled: bool = true
 var _surface_snap_enabled: bool = true

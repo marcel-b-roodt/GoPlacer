@@ -2,6 +2,10 @@
 class_name PlacementGizmo
 extends RefCounted
 
+const _SNAP_HELPER_SCRIPT := preload(
+	"res://addons/go_placer/placement/snap_helper.gd"
+)
+
 const GIZMO_RADIUS := 1.5
 const GIZMO_SEGMENTS := 64
 const GIZMO_COLOR := Color(1.0, 1.0, 0.3, 0.8)

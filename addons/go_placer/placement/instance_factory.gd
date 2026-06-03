@@ -2,6 +2,10 @@
 class_name InstanceFactory
 extends RefCounted
 
+const _ENTRY_SCRIPT := preload(
+	"res://addons/go_placer/palette/go_placer_palette_entry.gd"
+)
+
 static func create_from_entry(
 	entry: GoPlacerPaletteEntry
 ) -> Node:

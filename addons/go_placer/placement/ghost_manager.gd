@@ -2,6 +2,13 @@
 class_name GhostManager
 extends RefCounted
 
+const _ENTRY_SCRIPT := preload(
+	"res://addons/go_placer/palette/go_placer_palette_entry.gd"
+)
+const _INSTANCE_FACTORY_SCRIPT := preload(
+	"res://addons/go_placer/placement/instance_factory.gd"
+)
+
 const GHOST_MATERIAL_ALPHA := 0.5
 
 var _ghost: Node3D = null
