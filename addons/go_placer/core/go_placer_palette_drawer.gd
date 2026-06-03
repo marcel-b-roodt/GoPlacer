@@ -172,11 +172,12 @@ func _discover_palettes_in_dir(dir_path: String) -> void:
 		if da.current_is_dir():
 			_discover_palettes_in_dir(full_path)
 		elif file_name.get_extension() == "tres":
-			var type_hint: String = ResourceLoader.get_resource_type(full_path)
-			if type_hint != "" and type_hint != "GoPlacerPalette":
+			if not ResourceLoader.exists(full_path, "GoPlacerPalette"):
 				file_name = da.get_next()
 				continue
-			var res: Resource = ResourceLoader.load(full_path, "", ResourceLoader.CACHE_MODE_REUSE)
+			var res: Resource = ResourceLoader.load(
+				full_path, "GoPlacerPalette", ResourceLoader.CACHE_MODE_REUSE
+			)
 			if res is GoPlacerPalette:
 				_palettes.append(res as GoPlacerPalette)
 		file_name = da.get_next()
