@@ -7,7 +7,7 @@ const _ENTRY_SCRIPT := preload(
 )
 
 static func create_from_entry(
-	entry: GoPlacerPaletteEntry
+	entry: Resource
 ) -> Node:
 	if entry == null or entry.asset == null:
 		return null

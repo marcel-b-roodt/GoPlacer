@@ -1,7 +1,7 @@
 @tool
 extends VBoxContainer
 
-signal entry_activated(entry: GoPlacerPaletteEntry)
+signal entry_activated(entry: Resource)
 
 const _PALETTE_DRAWER_SCRIPT := preload(
 	"res://addons/go_placer/core/go_placer_palette_drawer.gd"
@@ -14,8 +14,8 @@ const _ENTRY_SCRIPT := preload(
 )
 
 var _placement_controller: Node = null
-var _palette_drawer: GoPlacerPaletteDrawer = null
-var _settings_drawer: GoPlacerSettingsDrawer = null
+var _palette_drawer: VBoxContainer = null
+var _settings_drawer: VBoxContainer = null
 var _plugin: EditorPlugin = null
 var _built: bool = false
 
@@ -54,12 +54,12 @@ func _build_ui() -> void:
 		_settings_drawer.set_plugin(_plugin)
 	add_child(_settings_drawer)
 
-func get_active_entry() -> GoPlacerPaletteEntry:
+func get_active_entry() -> Resource:
 	if _palette_drawer == null:
 		return null
 	return _palette_drawer.get_active_entry()
 
-func _on_entry_selected(entry: GoPlacerPaletteEntry) -> void:
+func _on_entry_selected(entry: Resource) -> void:
 	if entry == null or entry.asset == null:
 		return
 	if _plugin != null:

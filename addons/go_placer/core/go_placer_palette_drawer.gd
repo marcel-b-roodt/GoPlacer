@@ -1,6 +1,9 @@
 @tool
 class_name GoPlacerPaletteDrawer
-extends GoPlacerDrawer
+extends "res://addons/go_placer/core/go_placer_drawer.gd"
+
+signal entry_selected(entry: Resource)
+signal entry_deselected()
 
 const _DRAWER_SCRIPT := preload(
 	"res://addons/go_placer/core/go_placer_drawer.gd"
@@ -17,7 +20,7 @@ const _ITEM_LIST_SCRIPT := preload(
 const THUMB_SIZE := 64
 
 var _placement_controller: Node = null
-var _palettes: Array[GoPlacerPalette] = []
+var _palettes: Array[Resource] = []
 var _active_palette_index: int = -1
 var _active_entry_index: int = -1
 var _palette_option: OptionButton = null
@@ -26,7 +29,7 @@ var _delete_pal_btn: Button = null
 var _edit_pal_btn: Button = null
 var _add_entry_btn: Button = null
 var _remove_entry_btn: Button = null
-var _entry_grid: GoPlacerItemList = null
+var _entry_grid: ItemList = null
 
 func setup(placement_controller: Node) -> void:
 	_placement_controller = placement_controller
@@ -119,10 +122,10 @@ func _exit_tree() -> void:
 		if fs.filesystem_changed.is_connected(_rebuild_palette_dropdown):
 			fs.filesystem_changed.disconnect(_rebuild_palette_dropdown)
 
-func get_active_entry() -> GoPlacerPaletteEntry:
+func get_active_entry() -> Resource:
 	if _active_palette_index < 0 or _active_palette_index >= _palettes.size():
 		return null
-	var palette: GoPlacerPalette = _palettes[_active_palette_index]
+	var palette: Resource = _palettes[_active_palette_index]
 	if _active_entry_index < 0 or _active_entry_index >= palette.entries.size():
 		return null
 	return palette.entries[_active_entry_index]
@@ -167,7 +170,7 @@ func _rebuild_palette_dropdown() -> void:
 	var prev_selected: int = _palette_option.selected
 	_palette_option.clear()
 	for i: int in _palettes.size():
-		var pal: GoPlacerPalette = _palettes[i]
+		var pal: Resource = _palettes[i]
 		var display: String = pal.palette_name
 		if display == "":
 			display = pal.resource_path.get_file()
@@ -188,8 +191,8 @@ func _refresh_entry_grid() -> void:
 	_entry_grid.clear()
 	if _active_palette_index < 0 or _active_palette_index >= _palettes.size():
 		return
-	var palette: GoPlacerPalette = _palettes[_active_palette_index]
-	for entry: GoPlacerPaletteEntry in palette.entries:
+	var palette: Resource = _palettes[_active_palette_index]
+	for entry: ResourceEntry in palette.entries:
 		var name: String = _get_entry_display_name(entry)
 		var icon: Texture2D = _get_entry_icon(entry)
 		if icon != null:
@@ -224,7 +227,7 @@ func _on_preview_ready(
 		return
 	_entry_grid.set_item_icon(index, thumbnail)
 
-func _get_entry_display_name(entry: GoPlacerPaletteEntry) -> String:
+func _get_entry_display_name(entry: ResourceEntry) -> String:
 	if entry.display_name != "":
 		return entry.display_name
 	if entry.asset == null:
@@ -236,7 +239,7 @@ func _get_entry_display_name(entry: GoPlacerPaletteEntry) -> String:
 		return entry.asset.resource_path.get_file().get_basename()
 	return "Unnamed"
 
-func _get_entry_icon(entry: GoPlacerPaletteEntry) -> Texture2D:
+func _get_entry_icon(entry: ResourceEntry) -> Texture2D:
 	if not Engine.is_editor_hint():
 		return null
 	if entry.asset == null:
@@ -262,7 +265,7 @@ func _on_palette_selected(index: int) -> void:
 
 func _on_entry_selected(index: int) -> void:
 	_active_entry_index = index
-	var entry: GoPlacerPaletteEntry = get_active_entry()
+	var entry: ResourceEntry = get_active_entry()
 	if entry != null:
 		entry_selected.emit(entry)
 
@@ -281,7 +284,7 @@ func _on_new_palette() -> void:
 	_show_name_dialog_async("New Palette", "Palette", _create_palette_with_name)
 
 func _create_palette_with_name(name_input: String) -> void:
-	var pal: GoPlacerPalette = _PALETTE_SCRIPT.new()
+	var pal: Resource = _PALETTE_SCRIPT.new()
 	pal.palette_name = name_input
 	var safe_name: String = name_input.to_snake_case()
 	if safe_name.is_empty():
@@ -316,7 +319,7 @@ func _on_edit_palette() -> void:
 func _on_delete_palette() -> void:
 	if _active_palette_index < 0 or _active_palette_index >= _palettes.size():
 		return
-	var pal: GoPlacerPalette = _palettes[_active_palette_index]
+	var pal: Resource = _palettes[_active_palette_index]
 	var path: String = pal.resource_path
 	if path == "":
 		_palettes.remove_at(_active_palette_index)
@@ -357,7 +360,7 @@ func _on_asset_file_selected(path: String) -> void:
 	if resource == null:
 		return
 	_palettes[_active_palette_index].add_entry(resource)
-	var pal: GoPlacerPalette = _palettes[_active_palette_index]
+	var pal: Resource = _palettes[_active_palette_index]
 	if pal.resource_path != "":
 		ResourceSaver.save(pal, pal.resource_path)
 	_refresh_entry_grid()
@@ -369,7 +372,7 @@ func _on_remove_entry() -> void:
 		return
 	_palettes[_active_palette_index].remove_entry(_active_entry_index)
 	_active_entry_index = -1
-	var pal: GoPlacerPalette = _palettes[_active_palette_index]
+	var pal: Resource = _palettes[_active_palette_index]
 	if pal.resource_path != "":
 		ResourceSaver.save(pal, pal.resource_path)
 	_refresh_entry_grid()
@@ -389,7 +392,7 @@ func _on_drop_received(data: Variant) -> void:
 			continue
 		if resource is PackedScene or resource is Mesh:
 			_palettes[_active_palette_index].add_entry(resource)
-	var pal: GoPlacerPalette = _palettes[_active_palette_index]
+	var pal: Resource = _palettes[_active_palette_index]
 	if pal.resource_path != "":
 		ResourceSaver.save(pal, pal.resource_path)
 	_refresh_entry_grid()
