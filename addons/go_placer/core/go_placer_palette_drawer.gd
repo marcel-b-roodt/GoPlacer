@@ -149,6 +149,7 @@ func _discover_palettes() -> void:
 	if not Engine.is_editor_hint():
 		return
 	_discover_palettes_in_dir("res://palettes/")
+	_discover_palettes_in_dir("res://")
 
 func _discover_palettes_in_dir(dir_path: String) -> void:
 	if not DirAccess.dir_exists_absolute(dir_path):
