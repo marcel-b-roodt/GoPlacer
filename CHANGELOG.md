@@ -8,10 +8,6 @@ Versioning follows [Semantic Versioning](https://semver.org).
 
 ## [Unreleased]
 
----
-
-## [0.1.0] — 2026-06-03
-
 ### Added
 - Bottom dock panel with Palettes and Settings drawers
 - Palette auto-discovery from `res://palettes/`, auto-refresh on filesystem changes
@@ -19,7 +15,7 @@ Versioning follows [Semantic Versioning](https://semver.org).
 - `EditorResourcePreview`-based thumbnail generation for palette entries
 - Entry selection → placement FSM: IDLE → PREVIEWING → DRAG_ROTATE → back to PREVIEWING
 - Ghost preview: semi-transparent blue material, collision disabled, raycast exclusion
-- 3-layer raycast cascade: physics (with Area3D) → mesh-face Moller-Trumbore → floor plane (Y=0) fallback
+- 3-layer raycast cascade: physics (with Area3D) → mesh-face Moller–Trumbore → floor plane (Y=0) fallback
 - Face normal direction guarantee: mesh normals always face toward camera
 - Surface snapping with normal alignment: Y-up aligns to outward surface normal
 - Azimuth gizmo: yellow arc + forward direction line during drag-rotate
@@ -32,7 +28,7 @@ Versioning follows [Semantic Versioning](https://semver.org).
 - `PlacementGizmo` — extracted gizmo rendering (arc mesh, line mesh, positioning)
 - `PlacementController` — cleaned up, dead code removed, public getters for settings
 - Social content template and queue system (`docs/internal/social/`)
-- Copilot instructions (`docs/internal/copilot-instructions.md` + `AGENTS.md` symlink)
+- Copilot instructions (`docs/internal/copilot-instructions.md` + `AGENTS.md`)
 - CI pipeline: `gdparse` + `gdlint` on every push/PR via GitHub Actions
 - Release scripts: `scripts/release.sh`, `scripts/release-dev.sh`, `scripts/release/prepare_release_notes.sh`
 
