@@ -8,6 +8,10 @@ Versioning follows [Semantic Versioning](https://semver.org).
 
 ## [Unreleased]
 
+---
+
+## [0.1.1] — 2026-06-04
+
 ### Added
 - Square tile layout for palette entry grid (`fixed_column_width`, `fixed_icon_size`)
 - Mesh Picking toggle in Settings — skip expensive mesh-face raycast pass when disabled (default: on)
