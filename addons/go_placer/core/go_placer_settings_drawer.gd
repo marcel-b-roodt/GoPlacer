@@ -147,6 +147,10 @@ func _populate_snap_angle_options() -> void:
 	_snap_angle_option.set_item_metadata(4, 90.0)
 	_snap_angle_option.select(1)
 
+func _on_normal_align_toggled(enabled: bool) -> void:
+	if _placement_controller != null:
+		_placement_controller.set_normal_align(enabled)
+
 func _on_aabb_snap_toggled(enabled: bool) -> void:
 	if _placement_controller != null:
 		_placement_controller.set_aabb_snap(enabled)
