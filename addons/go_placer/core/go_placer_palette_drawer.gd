@@ -19,6 +19,7 @@ const _ITEM_LIST_SCRIPT := preload(
 )
 const THUMB_SIZE := 64
 const TILE_SIZE := 80
+const DISCOVER_COOLDOWN_MS := 1000
 
 var _placement_controller: Node = null
 var _palettes: Array[GoPlacerPalette] = []
@@ -31,6 +32,7 @@ var _edit_pal_btn: Button = null
 var _add_entry_btn: Button = null
 var _remove_entry_btn: Button = null
 var _entry_grid: GoPlacerItemList = null
+var _discover_timer: SceneTreeTimer = null
 
 func setup(placement_controller: Node) -> void:
 	_placement_controller = placement_controller
@@ -113,16 +115,16 @@ func _ready() -> void:
 
 	if Engine.is_editor_hint():
 		var fs := EditorInterface.get_resource_filesystem()
-		if not fs.filesystem_changed.is_connected(_rebuild_palette_dropdown):
-			fs.filesystem_changed.connect(_rebuild_palette_dropdown)
+		if not fs.filesystem_changed.is_connected(_on_filesystem_changed):
+			fs.filesystem_changed.connect(_on_filesystem_changed)
 	_discover_palettes()
 	_rebuild_palette_dropdown()
 
 func _exit_tree() -> void:
 	if Engine.is_editor_hint():
 		var fs := EditorInterface.get_resource_filesystem()
-		if fs.filesystem_changed.is_connected(_rebuild_palette_dropdown):
-			fs.filesystem_changed.disconnect(_rebuild_palette_dropdown)
+		if fs.filesystem_changed.is_connected(_on_filesystem_changed):
+			fs.filesystem_changed.disconnect(_on_filesystem_changed)
 
 func get_active_entry() -> GoPlacerPaletteEntry:
 	if _active_palette_index < 0 or _active_palette_index >= _palettes.size():
@@ -144,6 +146,12 @@ func _make_panel_style() -> StyleBox:
 	style.content_margin_right = 4
 	return style
 
+func _on_filesystem_changed() -> void:
+	if _discover_timer != null and _discover_timer.time_left > 0.0:
+		return
+	_discover_timer = get_tree().create_timer(DISCOVER_COOLDOWN_MS / 1000.0)
+	_discover_timer.timeout.connect(_rebuild_palette_dropdown)
+
 func _discover_palettes() -> void:
 	_palettes.clear()
 	if not Engine.is_editor_hint():
@@ -164,7 +172,11 @@ func _discover_palettes_in_dir(dir_path: String) -> void:
 		if da.current_is_dir():
 			_discover_palettes_in_dir(full_path)
 		elif file_name.get_extension() == "tres":
-			var res: Resource = load(full_path)
+			var type_hint: String = ResourceLoader.get_resource_type(full_path)
+			if type_hint != "" and type_hint != "GoPlacerPalette":
+				file_name = da.get_next()
+				continue
+			var res: Resource = ResourceLoader.load(full_path, "", ResourceLoader.CACHE_MODE_REUSE)
 			if res is GoPlacerPalette:
 				_palettes.append(res as GoPlacerPalette)
 		file_name = da.get_next()
