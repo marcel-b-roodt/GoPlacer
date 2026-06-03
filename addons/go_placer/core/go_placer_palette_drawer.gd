@@ -199,33 +199,42 @@ func _refresh_entry_grid() -> void:
 			_entry_grid.add_item(name, icon)
 		else:
 			_entry_grid.add_item(name)
-		if entry.asset != null and entry.asset.resource_path != "":
+		if entry.asset != null:
 			_request_preview(
-				entry.asset.resource_path, _entry_grid.item_count - 1
+				entry, _entry_grid.item_count - 1
 			)
 
-func _request_preview(path: String, index: int) -> void:
+func _request_preview(entry: GoPlacerPaletteEntry, index: int) -> void:
 	if not Engine.is_editor_hint():
+		return
+	if entry.asset == null:
 		return
 	var previewer: EditorResourcePreview = (
 		EditorInterface.get_resource_previewer()
 	)
-	previewer.queue_resource_preview(
-		path, self, "_on_preview_ready", index
-	)
+	if entry.asset.resource_path != "":
+		previewer.queue_resource_preview(
+			entry.asset.resource_path, self, "_on_preview_ready", index
+		)
+	else:
+		previewer.queue_edited_resource_preview(
+			entry.asset, self, "_on_preview_ready", index
+		)
 
 func _on_preview_ready(
 	_path: String,
-	_preview: Texture2D,
+	preview: Texture2D,
 	thumbnail: Texture2D,
 	userdata: Variant,
 ) -> void:
-	if thumbnail == null or _entry_grid == null:
+	if _entry_grid == null:
 		return
 	var index: int = int(userdata)
 	if index < 0 or index >= _entry_grid.item_count:
 		return
-	_entry_grid.set_item_icon(index, thumbnail)
+	var icon: Texture2D = preview if preview != null else thumbnail
+	if icon != null:
+		_entry_grid.set_item_icon(index, icon)
 
 func _get_entry_display_name(entry: GoPlacerPaletteEntry) -> String:
 	if entry.display_name != "":
