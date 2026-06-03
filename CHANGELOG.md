@@ -8,6 +8,10 @@ Versioning follows [Semantic Versioning](https://semver.org).
 
 ## [Unreleased]
 
+---
+
+## [0.1.0] — 2026-06-03
+
 ### Added
 - Bottom dock panel with Palettes and Settings drawers
 - Palette auto-discovery from `res://palettes/`, auto-refresh on filesystem changes
