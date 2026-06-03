@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# verify.sh — GoPlacer pre-commit verification script
+#
+# Checks all GDScript files for syntax errors (gdparse) and style issues (gdlint).
+# Optional: run the full headless test suite for CI-parity smoke testing.
+# Run manually before committing:   ./verify.sh
+# Or wire it up once:               git config core.hooksPath .githooks
+# Full parity check:                ./verify.sh --with-tests
+#
+# Requires gdtoolkit:  pip install gdtoolkit
+#                      (or: pip install --break-system-packages gdtoolkit on Arch)
+
+set -euo pipefail
+
+RUN_TESTS=0
+if [[ "${1:-}" == "--with-tests" ]]; then
+  RUN_TESTS=1
+fi
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$REPO_ROOT"
+
+mapfile -t ADDON_SCRIPTS < <(find addons -name "*.gd" -not -path "addons/gdUnit4/*" 2>/dev/null)
+mapfile -t TEST_SCRIPTS  < <(find tests  -name "*.gd" 2>/dev/null)
+ALL_SCRIPTS=("${ADDON_SCRIPTS[@]}" "${TEST_SCRIPTS[@]}")
+
+if [ "${#ALL_SCRIPTS[@]}" -eq 0 ]; then
+  echo "No GDScript files found. Nothing to verify."
+  exit 0
+fi
+
+echo "GoPlacer — pre-commit verification"
+echo "Files: ${#ALL_SCRIPTS[@]} GDScript file(s)"
+echo "────────────────────────────────────────"
+
+if ! command -v gdparse &>/dev/null; then
+  echo "ERROR: gdparse not found."
+  echo "Install it:  pip install gdtoolkit"
+  echo "  (Arch)     pip install --break-system-packages gdtoolkit"
+  exit 1
+fi
+
+echo ""
+echo "→ Syntax check (gdparse)..."
+PARSE_FAILED=0
+for f in "${ALL_SCRIPTS[@]}"; do
+  if ! gdparse "$f" 2>&1; then
+    echo "  FAIL: $f"
+    PARSE_FAILED=1
+  fi
+done
+if [ "$PARSE_FAILED" -ne 0 ]; then
+  echo ""
+  echo "✗ Syntax errors found. Fix them before committing."
+  exit 1
+fi
+echo "  ✓ All files parsed OK."
+
+echo ""
+echo "→ Lint check (gdlint)..."
+if gdlint "${ALL_SCRIPTS[@]}" 2>&1; then
+  echo "  ✓ No lint problems."
+else
+  echo ""
+  echo "✗ Lint issues found. Fix them or update .gdlintrc to suppress false positives."
+  exit 1
+fi
+
+echo ""
+echo "────────────────────────────────────────"
+echo "✓ Verification passed — safe to commit."
+
+if [[ "$RUN_TESTS" -eq 1 ]]; then
+  echo ""
+  echo "→ CI-parity smoke test (headless GdUnit4)..."
+  ./scripts/run_tests/run_tests.sh
+fi

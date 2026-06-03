@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: GDScript Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install gdtoolkit
+        run: pip install gdtoolkit
+
+      - name: Syntax check (gdparse)
+        run: |
+          mapfile -t SCRIPTS < <(find addons tests -name "*.gd")
+          echo "Checking ${#SCRIPTS[@]} file(s)..."
+          gdparse "${SCRIPTS[@]}"
+
+      - name: Lint check (gdlint)
+        run: |
+          mapfile -t SCRIPTS < <(find addons tests -name "*.gd")
+          gdlint "${SCRIPTS[@]}"
+
+  test:
+    name: GdUnit4 Tests
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run GdUnit4 tests (headless Godot)
+        uses: godot-gdunit-labs/gdUnit4-action@v1
+        with:
+          godot-version: "4.6.1"
+          godot-status: "stable"
+          version: "v6.1.2"
+          paths: |
+            res://tests
+          timeout: 15
+          report-name: test-report.xml
+          publish-report: false
+          upload-report: false
+
+      - name: Upload GdUnit4 XML report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: gdunit-results
+          path: reports/**/results.xml
+          if-no-files-found: error

@@ -1,0 +1,54 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# GdUnit4
+addons/gdUnit4/
+
+# GoBuild (sibling project, used for reference only)
+addons/go_build/
+
+# Godot-generated UID sidecar files and import cache
+*.uid
+*.import
+
+# Dev test assets (not shipped in release)
+materials/
+palettes/*.tres
+!palettes/.gitkeep
+test_objects/
+test_scenes/
+
+# Private local docs (social strategy, release notes, credentials)
+docs/internal/
+
+# Internal planning docs (local-only)
+.github/copilot-instructions.md
+TODO.md
+NearTermTodos.txt
+HighLevelTodos.txt
+
+# GdUnit4 test reports (local-only, generated)
+reports/
+
+# C# / .NET build outputs
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+.vs/
+
+# IDE
+.idea/
+*.iml
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Audio workfiles
+*.reapeaks
+*.rpp-bak
+
+# VSCode
+.vscode/settings.json
