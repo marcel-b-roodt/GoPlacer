@@ -2,6 +2,10 @@
 class_name GoPlacerSettingsDrawer
 extends GoPlacerDrawer
 
+const _DRAWER_SCRIPT := preload(
+	"res://addons/go_placer/core/go_placer_drawer.gd"
+)
+
 var _placement_controller: Node = null
 var _floor_snap_check: CheckBox = null
 var _surface_snap_check: CheckBox = null

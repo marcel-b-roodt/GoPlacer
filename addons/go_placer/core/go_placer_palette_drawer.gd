@@ -2,9 +2,9 @@
 class_name GoPlacerPaletteDrawer
 extends GoPlacerDrawer
 
-signal entry_selected(entry: GoPlacerPaletteEntry)
-signal entry_deselected()
-
+const _DRAWER_SCRIPT := preload(
+	"res://addons/go_placer/core/go_placer_drawer.gd"
+)
 const _PALETTE_SCRIPT := preload(
 	"res://addons/go_placer/palette/go_placer_palette.gd"
 )

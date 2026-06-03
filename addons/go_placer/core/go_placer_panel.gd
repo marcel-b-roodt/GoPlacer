@@ -9,6 +9,9 @@ const _PALETTE_DRAWER_SCRIPT := preload(
 const _SETTINGS_DRAWER_SCRIPT := preload(
 	"res://addons/go_placer/core/go_placer_settings_drawer.gd"
 )
+const _ENTRY_SCRIPT := preload(
+	"res://addons/go_placer/palette/go_placer_palette_entry.gd"
+)
 
 var _placement_controller: Node = null
 var _palette_drawer: GoPlacerPaletteDrawer = null
