@@ -20,6 +20,18 @@ const _ITEM_LIST_SCRIPT := preload(
 const THUMB_SIZE := 64
 const TILE_SIZE := 80
 
+var _placement_controller: Node = null
+var _palettes: Array[GoPlacerPalette] = []
+var _active_palette_index: int = -1
+var _active_entry_index: int = -1
+var _palette_option: OptionButton = null
+var _new_pal_btn: Button = null
+var _delete_pal_btn: Button = null
+var _edit_pal_btn: Button = null
+var _add_entry_btn: Button = null
+var _remove_entry_btn: Button = null
+var _entry_grid: GoPlacerItemList = null
+
 func _ready() -> void:
 	_setup_drawer("Palettes", true)
 
