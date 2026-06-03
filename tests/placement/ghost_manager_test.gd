@@ -66,13 +66,13 @@ func test_exclusion_rids_collected() -> void:
 	entry.asset = mesh
 	gm.spawn(entry, _scene_root)
 	var rids: Array[RID] = gm.get_exclusion_rids()
-	assert_bool(rids.size() >= 0).is_true()
+	assert_bool(rids.is_empty()).is_false()
 	gm.clear()
 	entry.queue_free()
 	mesh.queue_free()
 
 func test_spawn_replaces_previous_ghost() -> void:
-	var gm: GhostManager = _GHOST_MANAGER_SCRIPT.new()
+	var gm: GhostManager = GhostManager.new()
 	var entry1: GoPlacerPaletteEntry = _ENTRY_SCRIPT.new()
 	var mesh1 := BoxMesh.new()
 	mesh1.size = Vector3(1.0, 1.0, 1.0)

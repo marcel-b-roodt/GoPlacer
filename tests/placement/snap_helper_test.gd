@@ -52,46 +52,46 @@ func test_ray_triangle_intersect_behind() -> void:
 
 func test_basis_up_aligned_floor() -> void:
 	var basis := SnapHelper._basis_up_aligned(Vector3.UP, 0.0)
-	assert_vector3(basis.y).is_equal(Vector3.UP)
+	assert_vector(basis.y).is_equal_approx(Vector3.UP, Vector3(0.001, 0.001, 0.001))
 
 func test_basis_up_aligned_wall_x() -> void:
 	var basis := SnapHelper._basis_up_aligned(Vector3.RIGHT, 0.0)
-	assert_vector3(basis.y).is_equal(Vector3.RIGHT)
+	assert_vector(basis.y).is_equal_approx(Vector3.RIGHT, Vector3(0.001, 0.001, 0.001))
 
 func test_basis_up_aligned_wall_z() -> void:
 	var basis := SnapHelper._basis_up_aligned(Vector3.BACK, 0.0)
-	assert_vector3(basis.y).is_equal(Vector3.BACK)
+	assert_vector(basis.y).is_equal_approx(Vector3.BACK, Vector3(0.001, 0.001, 0.001))
 
 func test_basis_up_aligned_ceiling() -> void:
 	var basis := SnapHelper._basis_up_aligned(Vector3.DOWN, 0.0)
-	assert_vector3(basis.y).is_equal(Vector3.DOWN)
+	assert_vector(basis.y).is_equal_approx(Vector3.DOWN, Vector3(0.001, 0.001, 0.001))
 
 func test_basis_up_aligned_45_degree() -> void:
 	var normal := Vector3(1.0, 1.0, 0.0).normalized()
 	var basis := SnapHelper._basis_up_aligned(normal, 0.0)
-	assert_vector3(basis.y).is_equal(normal)
+	assert_vector(basis.y).is_equal_approx(normal, Vector3(0.001, 0.001, 0.001))
 
 func test_basis_up_aligned_near_up_uses_forward_ref() -> void:
 	var normal := Vector3(0.0, 0.9999, 0.01).normalized()
 	var basis := SnapHelper._basis_up_aligned(normal, 0.0)
-	assert_vector3(basis.y).is_equal(normal)
+	assert_vector(basis.y).is_equal_approx(normal, Vector3(0.001, 0.001, 0.001))
 
 func test_basis_up_aligned_azimuth_90() -> void:
 	var basis_0 := SnapHelper._basis_up_aligned(Vector3.UP, 0.0)
 	var basis_90 := SnapHelper._basis_up_aligned(Vector3.UP, PI / 2.0)
 	var angle := basis_0.y.angle_to(basis_90.y)
-	assert_float(angle).is_less(0.001)
+	assert_float(angle).is_equal_approx(0.0, 0.001)
 
 func test_basis_up_aligned_azimuth_rotates_xz() -> void:
 	var basis_0 := SnapHelper._basis_up_aligned(Vector3.UP, 0.0)
 	var basis_90 := SnapHelper._basis_up_aligned(Vector3.UP, PI / 2.0)
 	var angle := basis_0.x.angle_to(basis_90.x)
-	assert_float(absf(angle - PI / 2.0)).is_less(0.01)
+	assert_float(absf(angle - PI / 2.0)).is_equal_approx(0.0, 0.01)
 
 func test_flush_aabb_offset_floor_zero_aabb() -> void:
 	var mi := MeshInstance3D.new()
 	var offset := SnapHelper.flush_aabb_offset(mi, Vector3.UP, false)
-	assert_vector3(offset).is_equal(Vector3.ZERO)
+	assert_vector(offset).is_equal_approx(Vector3.ZERO, Vector3(0.001, 0.001, 0.001))
 	mi.queue_free()
 
 func test_flush_aabb_offset_floor() -> void:
@@ -101,7 +101,7 @@ func test_flush_aabb_offset_floor() -> void:
 	mi.mesh = mesh
 	var offset := SnapHelper.flush_aabb_offset(mi, Vector3.UP, false)
 	assert_float(offset.y).is_less(0.0)
-	assert_float(absf(offset.y) - 1.0).is_less(0.01)
+	assert_float(absf(offset.y) - 1.0).is_equal_approx(0.0, 0.01)
 	mi.queue_free()
 	mesh.queue_free()
 
@@ -121,7 +121,7 @@ func test_flush_aabb_offset_zero_normal() -> void:
 	var mi := MeshInstance3D.new()
 	mi.mesh = mesh
 	var offset := SnapHelper.flush_aabb_offset(mi, Vector3.ZERO, false)
-	assert_vector3(offset).is_equal(Vector3.ZERO)
+	assert_vector(offset).is_equal_approx(Vector3.ZERO, Vector3(0.001, 0.001, 0.001))
 	mi.queue_free()
 	mesh.queue_free()
 

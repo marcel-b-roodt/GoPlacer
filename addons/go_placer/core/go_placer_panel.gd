@@ -1,4 +1,5 @@
 @tool
+class_name GoPlacerPanel
 extends VBoxContainer
 
 signal entry_activated(entry: Resource)
