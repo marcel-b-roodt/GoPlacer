@@ -73,10 +73,8 @@ func _exit_tree() -> void:
 			_on_selection_changed
 		)
 
-func _handles(obj: Object) -> bool:
-	if _state != PlacingState.IDLE:
-		return true
-	return obj.is_class("Node3D")
+func _handles(_obj: Object) -> bool:
+	return true
 
 func _has_main_screen() -> bool:
 	return false
@@ -233,11 +231,8 @@ func _commit_place() -> void:
 		_cancel_placing()
 		return
 
-	if instance is Node3D:
-		(instance as Node3D).global_transform = ghost.global_transform
-
 	_placement_controller.set_active_entry(entry)
-	_placement_controller.commit_to_scene(instance, parent, scene_root)
+	_placement_controller.commit_to_scene(instance, parent, scene_root, ghost.global_transform)
 
 	EditorInterface.get_selection().clear()
 	if instance is Node:

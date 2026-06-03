@@ -59,7 +59,7 @@ func target_parent_node() -> Node:
 	return _target_parent_node
 
 func commit_to_scene(
-	instance: Node, parent: Node, scene_root: Node
+	instance: Node, parent: Node, scene_root: Node, ghost_transform: Transform3D
 ) -> void:
 	var undo_redo: EditorUndoRedoManager = _editor_plugin.get_undo_redo()
 	var asset_name: String = _active_entry.display_name
@@ -70,6 +70,8 @@ func commit_to_scene(
 	undo_redo.create_action("Place Asset: %s" % asset_name)
 	undo_redo.add_do_method(parent, "add_child", instance, true)
 	undo_redo.add_do_property(instance, "owner", scene_root)
+	if instance is Node3D:
+		undo_redo.add_do_property(instance, "global_transform", ghost_transform)
 	undo_redo.add_do_reference(instance)
 	undo_redo.add_undo_method(parent, "remove_child", instance)
 	undo_redo.commit_action()
