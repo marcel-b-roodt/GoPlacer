@@ -74,6 +74,8 @@ func _exit_tree() -> void:
 		)
 
 func _handles(obj: Object) -> bool:
+	if _state != PlacingState.IDLE:
+		return true
 	return obj.is_class("Node3D")
 
 func _has_main_screen() -> bool:
