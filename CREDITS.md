@@ -10,19 +10,19 @@ Thank you to everyone supporting GoPlacer on Patreon. Your contributions keep de
 
 ### 🏢 Studio Sponsors
 
-*Be the first — [support on Patreon](https://patreon.com/goplacer_godot)*
+*Be the first — [support on Patreon](https://patreon.com/gobuild_godot)*
 
 ### 🏗️ Architects
 
-*Be the first — [support on Patreon](https://patreon.com/goplacer_godot)*
+*Be the first — [support on Patreon](https://patreon.com/gobuild_godot)*
 
 ### 🔨 Builders
 
-*Be the first — [support on Patreon](https://patreon.com/goplacer_godot)*
+*Be the first — [support on Patreon](https://patreon.com/gobuild_godot)*
 
 ### 🪨 Supporters
 
-*Be the first — [support on Patreon](https://patreon.com/goplacer_godot)*
+*Be the first — [support on Patreon](https://patreon.com/gobuild_godot)*
 
 ---
 

@@ -69,7 +69,7 @@ Bug reports and feature requests are welcome. Please open an issue first for sig
 
 ## Support the project
 
-GoPlacer is free and open-source. If it saves you time, consider supporting development on [Patreon](https://patreon.com/goplacer_godot) or [Ko-fi](https://ko-fi.com/marcelroodt).
+GoPlacer is free and open-source. If it saves you time, consider supporting development on [Patreon](https://patreon.com/gobuild_godot) or [Ko-fi](https://ko-fi.com/marcelroodt).
 
 ## License
 
