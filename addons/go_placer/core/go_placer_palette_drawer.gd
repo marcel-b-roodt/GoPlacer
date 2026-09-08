@@ -168,6 +168,9 @@ func _discover_palettes_in_dir(dir_path: String) -> void:
 	da.list_dir_begin()
 	var file_name := da.get_next()
 	while file_name != "":
+		if _is_skipped_dir(file_name):
+			file_name = da.get_next()
+			continue
 		var full_path: String = dir_path.path_join(file_name)
 		if da.current_is_dir():
 			_discover_palettes_in_dir(full_path)
@@ -182,6 +185,12 @@ func _discover_palettes_in_dir(dir_path: String) -> void:
 				_palettes.append(res as GoPlacerPalette)
 		file_name = da.get_next()
 	da.list_dir_end()
+
+## Upstream submodule dirs (`_go_build_upstream`, ...) and VCS/engine caches
+## are never palette sources — probing their .tres files in host projects
+## produces load errors for foreign resources.
+func _is_skipped_dir(name: String) -> bool:
+	return name.begins_with("_") or name in [".git", ".godot"]
 
 func _rebuild_palette_dropdown() -> void:
 	if _palette_option == null:
